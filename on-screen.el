@@ -6,10 +6,8 @@
 ;; Maintainer: Michael Heerdegen <michael_heerdegen@web.de>
 ;; Created: 24 Jan 2013
 ;; Keywords: convenience
-;; Version: 0.1
-;; Last-Updated: 2013_03_03_15-55-41
-;;           By: michael_heerdegen@web.de
-;;     Update #: 0
+;; Version: 1.0
+
 
 ;; This file is not part of GNU Emacs.
 
@@ -29,9 +27,9 @@
 
 ;;; Commentary:
 
-;; Scrolling can sometimes be a bit distracting because your eyes need
-;; to find again the position where you had read.  This library offers
-;; an orientation by highlighting the previously visible buffer part.
+;; Scrolling can be distracting because your eyes may lose
+;; orientation.  This library implements a minor mode that highlights
+;; the previously visible buffer part after each scroll.
 ;;
 ;; Installation: Put this library somewhere in your load-path, or
 ;; install via M-x package-list-packages.  Then add to your init-file:
@@ -42,36 +40,38 @@
 ;;
 ;;   (on-screen-global-mode +1)
 ;;
-;; Alternatively you can use `on-screen-mode' which is a buffer local
-;; mode.  Add it to diverse hooks to use on-screen only for certain
-;; modes.  For example, to use it in all Info buffers, you would add
-;; this line to your init file:
+;; Alternatively you can use the buffer local version `on-screen-mode'.
+;; For example, add this line to your init file:
 ;;
 ;;   (add-hook 'Info-mode-hook 'on-screen-mode)
 ;;
-;; Customization: 
+;; to enable it in all Info buffers.
 ;;
-;; Type M-x customize-group on-screen RET to configure on-screen.
+;; By default, fringe markers are used for highlighting - see
+;; `on-screen-highlight-method' to change that.
+;;
+;; Type M-x customize-group on-screen RET to see what else can be
+;; configured.
 ;;
 ;; If you want to use transparent overlays for highlighting, and there
 ;; is the library "hexrgb.el" in your `load-path', it will be used to
-;; compute highlighting colors dynamically, instead of using constant
+;; compute highlighting colors dynamically instead of using constant
 ;; faces.  I.e. if you use non-default background colors (e.g. from
 ;; custom themes), on-screen will try to perform highlighting with a
 ;; suitable, slightly different color.  See
 ;; `on-screen-highlighting-to-background-delta' to control this.
 ;;
-;; Implementation notes:
+;; Implementation notes (mainly for myself):
 ;;
 ;; Implementing this functionality is not as straightforward as one
 ;; might think.  There are commands that scroll other windows than the
 ;; current one.  Not only scrolling commands can scroll text - also
 ;; editing or even redisplay can cause windows to scroll.  There is
-;; really wired stuff such as folding and narrowing, influencing the
-;; visible buffer part.  And although highlighting is realized in the
+;; weird stuff such as folding and narrowing, influencing the visible
+;; buffer part.  And although highlighting is realized in the
 ;; displayed buffers (with overlays), it must be organized on a
 ;; per-window basis, because different buffer parts may be displayed
-;; in multiple windows, and their highlightings must not interfere.
+;; in different windows, and their highlightings must not interfere.
 ;;
 ;; That all makes it necessary to observe windows via hacks in
 ;; different hooks, and to manage information about buffers, visible
@@ -80,8 +80,8 @@
 ;; some pitfalls - e.g. the data can be out of date if the window
 ;; configuration has changed and windows display different buffers
 ;; now.  The data must be updated, but not simply be thrown away,
-;; because the highligtings in the old buffers must be removed
-;; nontheless.
+;; because the highlightings in the old buffers must be removed
+;; nonetheless.
 ;;
 ;;
 ;; Acknowledgments:
@@ -111,7 +111,7 @@
   :prefix "on-screen")
 
 (defcustom on-screen-inverse-flag nil
-  "Which area to highlight.
+  "What area to highlight.
 When nil, highlight the previously visible screenful.  Else
 highlight the previously off-screen parts."
   :group 'on-screen :type 'boolean)
@@ -532,7 +532,7 @@ This has to be done for all its windows.  Goes to
         (when (eq (window-buffer win) buf)
           (on-screen-remove-highlighting win))))))
 
-(defun on-screen-after-window-configuration-change ()
+(defun on-screen-after-wconf-change ()
   "Clean up after the window configuration has changed.
 I.e., for all windows of the selected frame, remove all
 highlightings and clear all associated data."
@@ -550,9 +550,10 @@ highlightings and clear all associated data."
   (add-hook 'pre-command-hook        #'on-screen-record-ranges)
   (add-hook 'window-scroll-functions #'on-screen-after-scroll)
   (add-hook 'after-change-functions  #'on-screen-reset)
-  (add-hook 'window-configuration-change-hook
-            #'on-screen-after-window-configuration-change)
+  (add-hook 'window-configuration-change-hook #'on-screen-after-wconf-change)
   (setq on-screen-initialized-p t))
 
 
 (provide 'on-screen)
+
+;;; on-screen.el ends here
