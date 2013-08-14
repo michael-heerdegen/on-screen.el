@@ -184,7 +184,7 @@ available."
   "Face used by the narrow-line highlighting method."
   :group 'on-screen)
 
-(defcustom on-screen-delay 3
+(defcustom on-screen-delay 5
   "How long `on-screen-mode' should display optical aids."
   :group 'on-screen :type 'number)
 
