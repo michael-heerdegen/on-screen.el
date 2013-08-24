@@ -50,7 +50,7 @@
 ;; By default, fringe markers are used for highlighting - see
 ;; `on-screen-highlight-method' to change that.
 ;;
-;; Type M-x customize-group on-screen RET to see what else can be
+;; Type M-x customize-group RET on-screen RET to see what else can be
 ;; configured.
 ;;
 ;; If you want to use transparent overlays for highlighting, and there
