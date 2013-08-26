@@ -292,16 +292,16 @@ A nil value for AREA, TIMER or OVERLAYS means that the remembered
 values should not be changed.  If TIMER is the symbol `finished',
 remember nil for the timer."
   (let* ((entry (assoc win on-screen-data))
-         (data  (cdr entry))
-         (same-buffer-p (eq (car data) (window-buffer win))))
+	 (data  (cdr entry))
+	 (same-buffer-p (eq (car data) (window-buffer win))))
     (setq area  (or area        (and same-buffer-p (cadr data)))
-          timer (cond  ((timerp timer) timer)
-                       (timer nil)
-                       (t (and same-buffer-p (caddr data))))
-          overlays (or overlays (and same-buffer-p (cadddr data)))
-          data  `(,(window-buffer win) ,area ,timer ,overlays))
+	  timer (cond  ((timerp timer) timer)
+		       (timer nil)
+		       (t (and same-buffer-p (caddr data))))
+	  overlays (or overlays (and same-buffer-p (cadddr data)))
+	  data  `(,(window-buffer win) ,area ,timer ,overlays))
     (if entry
-        (setcdr entry data)
+	(setcdr entry data)
       (push (cons win data) on-screen-data))))
 
 (defun on-screen-get-data (win)
@@ -412,11 +412,13 @@ only the windows of the selected frame."
 With ALL-FRAMES non-nil, include all windows of all live frames.
 Else, consider only the windows of the selected frame."
   ;;   This normally goes to `pre-command-hook'.
-  (mapc (lambda (win) (with-current-buffer (window-buffer win)
+  (condition-case nil
+      (mapc (lambda (win) (with-current-buffer (window-buffer win)
                    (when (on-screen-enabled-p)
                      (on-screen-record-data win (list (on-screen-window-start win)
-                                                      (on-screen-window-end win))))))
-        (on-screen-get-windows all-frames)))
+                                                      (on-screen-window-end   win))))))
+        (on-screen-get-windows all-frames))
+    ((debug error) nil)))
 
 (defun on-screen-after-scroll (win display-start)
   "DTRT after scrolling.
