@@ -126,7 +126,7 @@ The following values are valid:
   narrow-line  - narrow horizontal lines
 
 The fringe and the narrow-line methods only work on graphical
-displays.
+displays.  narrow-line only works with Emacs 24 or higher.
 
 `on-screen-inverse-flag' defines which part(s) of the buffers are
 highlighted.
@@ -175,7 +175,7 @@ available."
   :type '(choice (const :tag "Use standard face" nil)
                  (float :tag "Delta")))
 
-(defface on-screen-fringe '((t (:inherit 'shadow)))
+(defface on-screen-fringe '((t (:inherit shadow)))
   "Face used for fringe markers."
   :group 'on-screen)
 
@@ -414,10 +414,10 @@ Else, consider only the windows of the selected frame."
   ;;   This normally goes to `pre-command-hook'.
   (condition-case nil
       (mapc (lambda (win) (with-current-buffer (window-buffer win)
-                   (when (on-screen-enabled-p)
-                     (on-screen-record-data win (list (on-screen-window-start win)
-                                                      (on-screen-window-end   win))))))
-        (on-screen-get-windows all-frames))
+		       (when (on-screen-enabled-p)
+			 (on-screen-record-data win (list (on-screen-window-start win)
+							  (on-screen-window-end   win))))))
+	    (on-screen-get-windows all-frames))
     ((debug error) nil)))
 
 (defun on-screen-after-scroll (win display-start)
