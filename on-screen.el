@@ -197,6 +197,17 @@ drawn highlighting will remain fixed relative to the text even
 if you scroll further until `on-screen-delay' is over."
   :group 'on-screen :type 'boolean)
 
+(defcustom on-screen-treat-cut-lines nil
+  "Whether to care about vertically cut lines.
+If nil, always count lines at the window start or end that are
+only partially visible as part of the visible area.  Else, a
+number between 0 and 1, meaning that lines will count as visible
+when the hidden part of them is less than this number.  Note that
+a non-nil value may make scrolling stuttering on slow computers."
+  :group 'on-screen
+  :type '(choice (const :tag "Count vertically cut lines as visible" nil)
+                 (float :tag "Count lines with hidden part less than this as visible"
+			:value .4)))
 
 ;;; Other variables
 
@@ -241,11 +252,11 @@ Type M-x customize-group on-screen RET for configuration."
 (defun on-screen-window-start (&optional window)
   "Like `window-start', but exclude partially visible lines."
   (let* ((start (window-start window))
-         (vis (pos-visible-in-window-p start window t)))
+         (vis (and on-screen-treat-cut-lines (pos-visible-in-window-p start window t))))
     (if (not (cddr vis))
         start
       (destructuring-bind (_x _y rtop _rbot rowh _vpos) vis
-        (if (< (/ (float rtop) (+ rtop rowh)) .4) ;; count as visible
+        (if (< (/ (float rtop) (+ rtop rowh)) on-screen-treat-cut-lines) ;; count as visible
             start
           (with-current-buffer (window-buffer window)
             (save-excursion
@@ -256,11 +267,11 @@ Type M-x customize-group on-screen RET for configuration."
 (defun on-screen-window-end (&optional window)
   "Like `window-end', but exclude partially visible lines."
   (let* ((end (window-end window))
-         (vis (pos-visible-in-window-p (1- end) window t)))
+         (vis (and on-screen-treat-cut-lines (pos-visible-in-window-p (1- end) window t))))
     (if (not (cddr vis))
         end
       (destructuring-bind (_x _y _rtop rbot rowh _vpos) vis
-        (if (< (/ (float rbot) (+ rbot rowh)) .4) ;; count as visible
+        (if (< (/ (float rbot) (+ rbot rowh)) on-screen-treat-cut-lines) ;; count as visible
             end
           (with-current-buffer (window-buffer window)
             (save-excursion
