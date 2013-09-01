@@ -407,17 +407,15 @@ only the windows of the selected frame."
          (mapcar (lambda (frame) (window-list frame))
                  (if all-frames (frame-list) (list (selected-frame))))))
 
-(defun on-screen-record-ranges (&optional all-frames)
-  "Remember visible buffer parts.
-With ALL-FRAMES non-nil, include all windows of all live frames.
-Else, consider only the windows of the selected frame."
+(defun on-screen-record-ranges ()
+  "Remember visible buffer parts in the selected frame."
   ;;   This normally goes to `pre-command-hook'.
   (condition-case nil
       (mapc (lambda (win) (with-current-buffer (window-buffer win)
 		       (when (on-screen-enabled-p)
 			 (on-screen-record-data win (list (on-screen-window-start win)
 							  (on-screen-window-end   win))))))
-	    (on-screen-get-windows all-frames))
+	    (on-screen-get-windows))
     ((debug error) nil)))
 
 (defun on-screen-after-scroll (win display-start)
