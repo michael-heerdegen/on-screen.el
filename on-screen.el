@@ -280,14 +280,10 @@ Type M-x customize-group on-screen RET for configuration."
               (point))))))))
 
 (defalias 'on-screen-beginning-of-line
-  (if (fboundp 'beginning-of-visual-line)
-      'beginning-of-visual-line
-    'beginning-of-line))
+  'beginning-of-line)
 
 (defalias 'on-screen-end-of-line
-  (if (fboundp 'end-of-visual-line)
-      'end-of-visual-line
-    'end-of-line))
+  'end-of-line)
 
 (defun on-screen-record-data (win area &optional timer overlays)
   ;; The collected data has the form ((beg end) timer overlays), and
