@@ -211,6 +211,9 @@ a non-nil value may make scrolling stuttering on slow computers."
 
 ;;; Other variables
 
+(defvar on-screen-overlay-priority 9999
+  "Priority for all on-screen overlays.")
+
 (defvar on-screen-initialized-p nil
   "Whether we have already added stuff to the hooks.")
 
@@ -491,7 +494,7 @@ This should normally go to `window-scroll-functions'."
                overlays (delq nil overlays))
               (dolist (ov overlays)
                 (overlay-put ov 'window win) ; display only in selected window
-                (overlay-put ov 'priority 9999)) 
+                (overlay-put ov 'priority on-screen-overlay-priority)) 
               (when (memq on-screen-highlight-method '(shadow line))
                 (dolist (ov overlays)
                   (overlay-put ov 'face (on-screen-get-shadow-face win))))
