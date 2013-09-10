@@ -404,6 +404,11 @@ remember nil for the timer."
               (make-overlay (progn (goto-char pos) (on-screen-beginning-of-line) (point))
                             (progn (goto-char pos) (on-screen-end-of-line)       (point))))))
     (overlay-put ov 'face 'on-screen-narrow-line)
+    ;; The following is necessary to get a line spanning the entire
+    ;; window width, because underlining is only applied to text - a
+    ;; problem especially for empty lines.  However this hides any
+    ;; other highlighting there, e.g. from stripe-buffer or
+    ;; hl-line-mode.  I think there's nothing I can do about that.
     (overlay-put ov 'after-string (propertize "foo"
                                               'face 'on-screen-narrow-line
                                               'display `(space :align-to ,(window-width win))
