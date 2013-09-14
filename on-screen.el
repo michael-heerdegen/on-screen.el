@@ -49,18 +49,29 @@
 ;; to enable it in all Info buffers.
 ;;
 ;; By default, fringe markers are used for highlighting - see
-;; `on-screen-highlight-method' to change that.
+;; `on-screen-highlight-method' to change that.  Type M-x
+;; customize-group RET on-screen RET to see what else can be
+;; configured.  If you use a configuration file (.emacs), you may also
+;; want to define mode specific settings by using buffer local
+;; variables.  For example, to use non intrusive fringe markers by
+;; default, but transparent overlays in w3m, you would add
 ;;
-;; Type M-x customize-group RET on-screen RET to see what else can be
-;; configured.
+;;   (add-hook
+;;    'w3m-mode-hook
+;;    (lambda ()
+;;      (set (make-local-variable 'on-screen-highlight-method)
+;;       'shadow)))
 ;;
-;; If you want to use transparent overlays for highlighting, and there
-;; is the library "hexrgb.el" in your `load-path', it will be used to
-;; compute highlighting colors dynamically instead of using constant
-;; faces.  I.e. if you use non-default background colors (e.g. from
-;; custom themes), on-screen will try to perform highlighting with a
+;; to your .emacs.
+;;
+;; If you use transparent overlays for highlighting and there is the
+;; library "hexrgb.el" in your `load-path', it will be used to compute
+;; highlighting colors dynamically instead of using constant faces.
+;; I.e. if you use non-default background colors (e.g. from custom
+;; themes), on-screen will try to perform highlighting with a
 ;; suitable, slightly different color.  See
 ;; `on-screen-highlighting-to-background-delta' to control this.
+;;
 ;;
 ;; Implementation notes (mainly for myself):
 ;;
@@ -152,13 +163,14 @@ Ignored if highlighting doesn't use the fringe."
   :group 'on-screen)
 
 (defface on-screen-shadow
-  '((((class color grayscale) (min-colors 88) (background light))
-     :background "gray95")
-    (((class color grayscale) (min-colors 88) (background dark))
-     :background "gray10")
-    (((class color) (min-colors 8) (background light))
+  '((((class color) (min-colors 88) (background light))
+     :background "#f2efcb" ;; "#f5f4ff" is a bit less intrusive
+     )
+    (((class color) (min-colors 88) (background dark))
+     :background "#272620")
+    (((class color) (min-colors 8)  (background light))
      :background "green")
-    (((class color) (min-colors 8) (background dark))
+    (((class color) (min-colors 8)  (background dark))
      :background "blue"))
   "Face used for displaying a transparent overlay."
   :group 'on-screen)
