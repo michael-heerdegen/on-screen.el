@@ -164,7 +164,7 @@ Ignored if highlighting doesn't use the fringe."
 
 (defface on-screen-shadow
   '((((class color) (min-colors 88) (background light))
-     :background "#f2efcb" ;; "#f5f4ff" is a bit less intrusive
+     :background "#f2efcb" ;; alternative: "#f5f4ff" is a bit less intrusive
      )
     (((class color) (min-colors 88) (background dark))
      :background "#272620")
