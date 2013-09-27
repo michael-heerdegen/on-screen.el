@@ -458,7 +458,12 @@ This should normally go to `window-scroll-functions'."
                  (overlays (caddr win-data))
                  (s1       (car area))
                  (s2       (cadr area)))
-            (when (and on-screen-auto-update (timerp timer))
+            (when (and
+		   on-screen-auto-update
+		   (timerp timer)
+		   ;; avoid removing highlighting when `window-scroll-functions' is
+		   ;; called multiple times in succession (follow-mode does that)
+		   (not (eq (car-safe area) (on-screen-window-start win))))
               ;; do what the timer would do, and cancel timer
               (on-screen-remove-highlighting win)
               (cancel-timer timer)
