@@ -209,6 +209,10 @@ drawn highlighting will remain fixed relative to the text even
 if you scroll further until `on-screen-delay' is over."
   :group 'on-screen :type 'boolean)
 
+(defcustom on-screen-remove-when-edit nil
+  "Whether to instantly remove highlighting when editing."
+  :group 'on-screen :type 'boolean)
+
 (defcustom on-screen-treat-cut-lines nil
   "Whether to care about vertically cut lines.
 If nil, always count lines at the window start or end that are
@@ -223,7 +227,7 @@ a non-nil value may make scrolling stuttering on slow computers."
 
 ;;; Other variables
 
-(defvar on-screen-overlay-priority 9999
+(defvar on-screen-overlay-priority 30     ; > stripe buffer, < ediff, isearch
   "Priority for all on-screen overlays.")
 
 (defvar on-screen-initialized-p nil
@@ -559,11 +563,12 @@ had changed."
   "Reset highligting for current buffer after it was changed.
 This has to be done for all its windows.  Goes to
 `after-change-functions'."
-  (let ((buf (current-buffer)))
-    (when (on-screen-enabled-p buf)
-      (dolist (win (on-screen-get-windows t))
-        (when (eq (window-buffer win) buf)
-          (on-screen-remove-highlighting win))))))
+  (when on-screen-remove-when-edit
+    (let ((buf (current-buffer)))
+      (when (on-screen-enabled-p buf)
+	(dolist (win (on-screen-get-windows t))
+	  (when (eq (window-buffer win) buf)
+	    (on-screen-remove-highlighting win)))))))
 
 (defun on-screen-after-wconf-change ()
   "Clean up after the window configuration has changed.
