@@ -298,11 +298,14 @@ Type M-x customize-group on-screen RET for configuration."
               (on-screen-beginning-of-line 0)
               (point))))))))
 
-(defalias 'on-screen-beginning-of-line
-  'beginning-of-line)
+(defun on-screen-beginning-of-line (&optional n)
+  (callf or n 1)
+  (forward-visible-line (- n 1)))
 
-(defalias 'on-screen-end-of-line
-  'end-of-line)
+(defun on-screen-end-of-line (&optional n)
+  (callf or n 1)
+  (forward-visible-line (- n 1))
+  (end-of-visible-line))
 
 (defun on-screen-record-data (win area &optional timer overlays)
   ;; The collected data has the form ((beg end) timer overlays), and
@@ -401,7 +404,7 @@ remember nil for the timer."
 (defun on-screen-fringe-string (topp leftp &optional inversep)
   "Return a string suitable for displaying fringe markers."
   (let ((xor (lambda (x y) (if x (not y) y))))
-    (propertize (copy-sequence "on-screen")
+    (propertize (purecopy " ")
                 'display  (list (if leftp 'left-fringe 'right-fringe)
                                 (if (funcall xor topp (not inversep))
                                     (if leftp 'top-left-angle 'top-right-angle)
