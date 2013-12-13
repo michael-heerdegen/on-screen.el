@@ -263,6 +263,7 @@ Type M-x customize-group on-screen RET for configuration."
     (unless on-screen-initialized-p
       (on-screen-initialize))))
 
+;;;###autoload
 (defalias 'global-on-screen-mode 'on-screen-global-mode)
 
 
