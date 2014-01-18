@@ -1,6 +1,6 @@
 ;;; on-screen.el --- guide your eyes while scrolling
 
-;; Copyright (C) 2013 Michael Heerdegen
+;; Copyright (C) 2013 - 2014 Michael Heerdegen
 
 ;; Author: Michael Heerdegen <michael_heerdegen@web.de>
 ;; Maintainer: Michael Heerdegen <michael_heerdegen@web.de>
