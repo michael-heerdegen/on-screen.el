@@ -454,6 +454,7 @@ only the windows of the selected frame."
   "Remember visible buffer parts in the selected frame."
   ;;   This normally goes to `pre-command-hook'.
   (incf on-screen-command-counter)
+  (add-hook 'after-change-functions #'on-screen-after-change) ;$$$$ bug#16796
   (condition-case nil
       (mapc (lambda (win) (with-current-buffer (window-buffer win)
 		       (when (on-screen-enabled-p)
