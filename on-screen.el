@@ -443,7 +443,7 @@ only the windows of the selected frame."
          (mapcar (lambda (frame) (window-list frame))
                  (if all-frames (frame-list) (list (selected-frame))))))
 
-(defun on-screen-record-ranges ()
+(defun on-screen-pre-command ()
   "Remember visible buffer parts in the selected frame."
   ;;   This normally goes to `pre-command-hook'.
   (condition-case nil
@@ -563,7 +563,7 @@ had changed."
           (when (timerp timer) (cancel-timer timer))))
       (setq on-screen-data (delq entry on-screen-data)))))
 
-(defun on-screen-reset (&rest _)
+(defun on-screen-after-change (&rest _)
   "Reset highligting for current buffer after it was changed.
 This has to be done for all its windows.  Goes to
 `after-change-functions'."
@@ -589,9 +589,9 @@ highlightings and clear all associated data."
 
 (defun on-screen-initialize ()
   "Prepare for using on-screen."
-  (add-hook 'pre-command-hook        #'on-screen-record-ranges)
+  (add-hook 'pre-command-hook        #'on-screen-pre-command)
   (add-hook 'window-scroll-functions #'on-screen-after-scroll)
-  (add-hook 'after-change-functions  #'on-screen-reset)
+  (add-hook 'after-change-functions  #'on-screen-after-change)
   (add-hook 'window-configuration-change-hook #'on-screen-after-wconf-change)
   (setq on-screen-initialized-p t))
 
