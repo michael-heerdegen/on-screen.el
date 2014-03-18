@@ -210,7 +210,11 @@ if you scroll further until `on-screen-delay' is over."
   :group 'on-screen :type 'boolean)
 
 (defcustom on-screen-remove-when-edit nil
-  "Whether to instantly remove highlighting when editing."
+  "Whether to instantly remove highlighting when editing.
+
+In those situations where a single command causes multiple
+changes to a buffer highlighting is always removed to avoid
+confusion."
   :group 'on-screen :type 'boolean)
 
 (defcustom on-screen-treat-cut-lines nil
@@ -235,6 +239,9 @@ a non-nil value may make scrolling stuttering on slow computers."
 
 (defvar on-screen-data nil
   "Association list holding internal data.")
+
+(defvar on-screen-command-counter 0)
+(defvar on-screen-last-change 0)
 
 
 ;;; User Commands
@@ -446,6 +453,7 @@ only the windows of the selected frame."
 (defun on-screen-pre-command ()
   "Remember visible buffer parts in the selected frame."
   ;;   This normally goes to `pre-command-hook'.
+  (incf on-screen-command-counter)
   (condition-case nil
       (mapc (lambda (win) (with-current-buffer (window-buffer win)
 		       (when (on-screen-enabled-p)
@@ -567,12 +575,14 @@ had changed."
   "Reset highligting for current buffer after it was changed.
 This has to be done for all its windows.  Goes to
 `after-change-functions'."
-  (when on-screen-remove-when-edit
+  (when (or on-screen-remove-when-edit
+	    (= on-screen-last-change on-screen-command-counter))
     (let ((buf (current-buffer)))
       (when (on-screen-enabled-p buf)
 	(dolist (win (on-screen-get-windows t))
 	  (when (eq (window-buffer win) buf)
-	    (on-screen-remove-highlighting win)))))))
+	    (on-screen-remove-highlighting win))))))
+  (setq on-screen-last-change on-screen-command-counter))
 
 (defun on-screen-after-wconf-change ()
   "Clean up after the window configuration has changed.
