@@ -110,7 +110,7 @@
 
 ;;; Requirements
 
-(eval-when-compile (require 'cl))
+(require 'cl-lib)
 (require 'timer)
 (require 'hexrgb nil t)
 
@@ -282,7 +282,7 @@ Type M-x customize-group on-screen RET for configuration."
          (vis (and on-screen-treat-cut-lines (pos-visible-in-window-p start window t))))
     (if (not (cddr vis))
         start
-      (destructuring-bind (_x _y rtop _rbot rowh _vpos) vis
+      (cl-destructuring-bind (_x _y rtop _rbot rowh _vpos) vis
         (if (< (/ (float rtop) (+ rtop rowh)) on-screen-treat-cut-lines) ;; count as visible
             start
           (with-current-buffer (window-buffer window)
@@ -297,7 +297,7 @@ Type M-x customize-group on-screen RET for configuration."
          (vis (and on-screen-treat-cut-lines (pos-visible-in-window-p (1- end) window t))))
     (if (not (cddr vis))
         end
-      (destructuring-bind (_x _y _rtop rbot rowh _vpos) vis
+      (cl-destructuring-bind (_x _y _rtop rbot rowh _vpos) vis
         (if (< (/ (float rbot) (+ rbot rowh)) on-screen-treat-cut-lines) ;; count as visible
             end
           (with-current-buffer (window-buffer window)
@@ -307,11 +307,11 @@ Type M-x customize-group on-screen RET for configuration."
               (point))))))))
 
 (defun on-screen-beginning-of-line (&optional n)
-  (callf or n 1)
+  (cl-callf or n 1)
   (forward-visible-line (- n 1)))
 
 (defun on-screen-end-of-line (&optional n)
-  (callf or n 1)
+  (cl-callf or n 1)
   (forward-visible-line (- n 1))
   (end-of-visible-line))
 
@@ -335,8 +335,8 @@ remember nil for the timer."
     (setq area  (or area        (and same-buffer-p (cadr data)))
 	  timer (cond  ((timerp timer) timer)
 		       (timer nil)
-		       (t (and same-buffer-p (caddr data))))
-	  overlays (or overlays (and same-buffer-p (cadddr data)))
+		       (t (and same-buffer-p (cl-caddr data))))
+	  overlays (or overlays (and same-buffer-p (cl-cadddr data)))
 	  data  `(,(window-buffer win) ,area ,timer ,overlays))
     (if entry
 	(setcdr entry data)
@@ -453,7 +453,7 @@ only the windows of the selected frame."
 (defun on-screen-pre-command ()
   "Remember visible buffer parts in the selected frame."
   ;;   This normally goes to `pre-command-hook'.
-  (incf on-screen-command-counter)
+  (cl-incf on-screen-command-counter)
   (add-hook 'after-change-functions #'on-screen-after-change) ;$$$$ bug#16796
   (condition-case nil
       (mapc (lambda (win) (with-current-buffer (window-buffer win)
@@ -472,7 +472,7 @@ This should normally go to `window-scroll-functions'."
           (let* ((win-data (on-screen-get-data win))
                  (area     (car  win-data))
                  (timer    (cadr win-data))
-                 (overlays (caddr win-data))
+                 (overlays (cl-caddr win-data))
                  (s1       (car area))
                  (s2       (cadr area)))
             (when (and
@@ -567,7 +567,7 @@ had changed."
       (with-current-buffer buffer
         (let* ((data     (cdr data))
                (timer    (cadr data))
-               (overlays (caddr data)))
+               (overlays (cl-caddr data)))
           (dolist (ov overlays) (delete-overlay ov))
           (when (timerp timer) (cancel-timer timer))))
       (setq on-screen-data (delq entry on-screen-data)))))
