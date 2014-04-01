@@ -192,8 +192,9 @@ available."
   "Face used for fringe markers."
   :group 'on-screen)
 
-(defface on-screen-narrow-line '((t (:width extra-expanded
-                                     :underline (:color "gray50" :style wave))))
+(defface on-screen-narrow-line
+  '((((background dark))  (:width extra-expanded :underline (:color "gray30" :style wave)))
+    (((background light)) (:width extra-expanded :underline (:color "gray70" :style wave))))
   "Face used by the narrow-line highlighting method."
   :group 'on-screen)
 
