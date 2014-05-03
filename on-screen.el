@@ -8,6 +8,7 @@
 ;; Keywords: convenience
 ;; Homepage: https://github.com/michael-heerdegen/on-screen.el
 ;; Version: 1.0
+;; Package-Requires: ((cl-lib "0"))
 
 
 ;; This file is not part of GNU Emacs.
