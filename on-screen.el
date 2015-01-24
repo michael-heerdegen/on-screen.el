@@ -1,6 +1,6 @@
 ;;; on-screen.el --- guide your eyes while scrolling
 
-;; Copyright (C) 2013 - 2014 Michael Heerdegen
+;; Copyright (C) 2013 - 2015 Michael Heerdegen
 
 ;; Author: Michael Heerdegen <michael_heerdegen@web.de>
 ;; Maintainer: Michael Heerdegen <michael_heerdegen@web.de>
@@ -59,9 +59,8 @@
 ;;
 ;;   (add-hook
 ;;    'w3m-mode-hook
-;;    (lambda ()
-;;      (set (make-local-variable 'on-screen-highlight-method)
-;;       'shadow)))
+;;    (defun my-w3m-setup-on-screen ()
+;;      (setq-local on-screen-highlight-method 'shadow)))
 ;;
 ;; to your .emacs.
 ;;
