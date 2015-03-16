@@ -284,7 +284,8 @@ Type M-x customize-group on-screen RET for configuration."
     (if (not (cddr vis))
         start
       (cl-destructuring-bind (_x _y rtop _rbot rowh _vpos) vis
-        (if (< (/ (float rtop) (+ rtop rowh)) on-screen-treat-cut-lines) ;; count as visible
+        (if (< (/ (float rtop) (+ rtop rowh))
+               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ;; count as visible
             start
           (with-current-buffer (window-buffer window)
             (save-excursion
@@ -299,7 +300,8 @@ Type M-x customize-group on-screen RET for configuration."
     (if (not (cddr vis))
         end
       (cl-destructuring-bind (_x _y _rtop rbot rowh _vpos) vis
-        (if (< (/ (float rbot) (+ rbot rowh)) on-screen-treat-cut-lines) ;; count as visible
+        (if (< (/ (float rbot) (+ rbot rowh))
+               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ;; count as visible
             end
           (with-current-buffer (window-buffer window)
             (save-excursion
