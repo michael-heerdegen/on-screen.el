@@ -1,4 +1,4 @@
-;;; on-screen.el --- guide your eyes while scrolling
+;;; on-screen.el --- guide your eyes while scrolling   -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2013 - 2015 Michael Heerdegen
 
