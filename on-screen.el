@@ -230,6 +230,12 @@ a non-nil value may make scrolling stuttering on slow computers."
                  (float :tag "Count lines with hidden part less than this as visible"
 			:value .4)))
 
+(defcustom on-screen-drawing-threshold 2
+  "If set, highlight only when scrolled at least that many lines."
+  :group 'on-screen
+  :type '(choice (const :tag "Off" nil)
+                 (integer :value 2)))
+
 ;;; Other variables
 
 (defvar on-screen-overlay-priority 30     ; > stripe buffer, < ediff, isearch
@@ -494,6 +500,9 @@ This should normally go to `window-scroll-functions'."
               (timer-set-time timer (timer-relative-time (current-time) on-screen-delay)))
              ((or (not area)
                   (= display-start s1)))
+             ((and (numberp on-screen-drawing-threshold)
+                   (< (abs (apply #'count-lines (sort (list display-start s1) #'<)))
+                      on-screen-drawing-threshold)))
              (t
               (setq
                overlays
