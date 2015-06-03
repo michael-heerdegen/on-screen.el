@@ -7,7 +7,7 @@
 ;; Created: 24 Jan 2013
 ;; Keywords: convenience
 ;; Homepage: https://github.com/michael-heerdegen/on-screen.el
-;; Version: 1.1
+;; Version: 1.2
 ;; Package-Requires: ((cl-lib "0"))
 
 
