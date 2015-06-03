@@ -236,6 +236,15 @@ a non-nil value may make scrolling stuttering on slow computers."
   :type '(choice (const :tag "Off" nil)
                  (integer :value 2)))
 
+(defvar on-screen-inhibit-highlighting nil
+  "Disable highlighting if non-nil.
+This variable is checked before highlighting is actually being
+performed, with the according buffer being current.
+
+If a function, it will be called with zero arguments.
+Highlighting will be inhibited if the result is non-nil.")
+
+
 ;;; Other variables
 
 (defvar on-screen-overlay-priority 30     ; > stripe buffer, < ediff, isearch
@@ -271,6 +280,10 @@ Type M-x customize-group on-screen RET for configuration."
 With a prefix argument ARG, enable the mode if ARG is positive,
 and disable it otherwise.  If called from Lisp, enable the mode
 if ARG is omitted or nil.
+
+You can make use of `on-screen-inhibit-highlighting' to prevent
+highlighting on a per-buffer basis.
+
 Type M-x customize-group on-screen RET for configuration."
   :group 'on-screen :global t
   (when on-screen-global-mode
@@ -608,7 +621,13 @@ highlightings and clear all associated data."
 (defun on-screen-enabled-p (&optional buffer)
   "Return non-nil if on-screen is enabled in BUFFER."
   (with-current-buffer (or buffer (current-buffer))
-    (if on-screen-global-mode t on-screen-mode)))
+    (and
+     (if on-screen-global-mode t on-screen-mode)
+     (cond
+      ((not on-screen-inhibit-highlighting) t)
+      ((functionp on-screen-inhibit-highlighting)
+       (not (funcall on-screen-inhibit-highlighting)))
+      (t nil)))))
 
 (defun on-screen-initialize ()
   "Prepare for using on-screen."
