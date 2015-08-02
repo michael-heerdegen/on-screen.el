@@ -218,7 +218,7 @@ changes to a buffer highlighting is always removed to avoid
 confusion."
   :group 'on-screen :type 'boolean)
 
-(defcustom on-screen-treat-cut-lines t
+(defcustom on-screen-treat-cut-lines nil
   "Whether to care about vertically cut lines.
 If nil, always count lines at the window start or end that are
 only partially visible as part of the visible area.  Else, a
