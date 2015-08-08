@@ -175,6 +175,12 @@ Ignored if highlighting doesn't use the fringe."
   "Face used for displaying a transparent overlay."
   :group 'on-screen)
 
+(defface on-screen-hl-line
+  '((((background light)) :background "#ffa0a0")
+    (((background dark))  :background "#300000"))
+  "Face used for displaying the \"line\" style overlay."
+  :group 'on-screen)
+
 (defcustom on-screen-highlighting-to-background-delta .05
   "How much shadow and line highlighting should differ from background.
 This should be a positive floating point number less than 1.
@@ -401,12 +407,14 @@ remember nil for the timer."
 
 (defun on-screen-get-shadow-face (win)
   "Return face for the transparent overlay in WIN."
-  (or (and on-screen-highlighting-to-background-delta
-           (let ((bg-col (apply #'on-screen-derive-from-frame-bg win
-                                (mapcar (lambda (x) (* x on-screen-highlighting-to-background-delta))
-                                        (list 1 -1 1)))))
-             (and bg-col `((t (:background ,bg-col))))))
-      'on-screen-shadow))
+  (if (eq on-screen-highlight-method 'shadow)
+      (or (and on-screen-highlighting-to-background-delta
+               (let ((bg-col (apply #'on-screen-derive-from-frame-bg win
+                                    (mapcar (lambda (x) (* x on-screen-highlighting-to-background-delta))
+                                            (list 1 -1 1)))))
+                 (and bg-col `((t (:background ,bg-col))))))
+          'on-screen-shadow)
+    'on-screen-hl-line))
 
 (defun on-screen-make-fringe-overlays (pos topp &optional inversep)
   "Create and return list of fringe overlays."
