@@ -114,6 +114,11 @@
 (require 'timer)
 (require 'hexrgb nil t)
 
+(declare-function hexrgb-saturation      "hexrgb")
+(declare-function hexrgb-approx-equal    "hexrgb")
+(declare-function hexrgb-increment-value "hexrgb")
+(declare-function hexrgb-increment-hue   "hexrgb")
+
 
 ;;; Configuration stuff
 
