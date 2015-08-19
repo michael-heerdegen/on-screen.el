@@ -108,7 +108,7 @@
 
 ;;; Code:
 
-;;; Requirements
+;;;; Requirements
 
 (require 'cl-lib)
 (require 'timer)
@@ -120,7 +120,7 @@
 (declare-function hexrgb-increment-hue   "hexrgb")
 
 
-;;; Configuration stuff
+;;;; Configuration stuff
 
 (defgroup on-screen nil
   "Guide your eyes while scrolling."
@@ -169,7 +169,7 @@ Ignored if highlighting doesn't use the fringe."
 
 (defface on-screen-shadow
   '((((class color) (min-colors 88) (background light))
-     :background "#f2efcb" ;; alternative: "#f5f4ff" is a bit less intrusive
+     :background "#f2efcb" ; alternative: "#f5f4ff" is a bit less intrusive
      )
     (((class color) (min-colors 88) (background dark))
      :background "#272620")
@@ -256,7 +256,7 @@ If a function, it will be called with zero arguments.
 Highlighting will be inhibited if the result is non-nil.")
 
 
-;;; Other variables
+;;;; Other variables
 
 (defvar on-screen-overlay-priority 30     ; > stripe buffer, < ediff, isearch
   "Priority for all on-screen overlays.")
@@ -271,7 +271,7 @@ Highlighting will be inhibited if the result is non-nil.")
 (defvar on-screen-last-change 0)
 
 
-;;; User Commands
+;;;; User Commands
 
 ;;;###autoload
 (define-minor-mode on-screen-mode
@@ -305,7 +305,7 @@ Type M-x customize-group on-screen RET for configuration."
 (defalias 'global-on-screen-mode 'on-screen-global-mode)
 
 
-;;; Internal functions
+;;;; Internal functions
 
 (defun on-screen-window-start (&optional window)
   "Like `window-start', but exclude partially visible lines."
@@ -315,7 +315,7 @@ Type M-x customize-group on-screen RET for configuration."
         start
       (cl-destructuring-bind (_x _y rtop _rbot rowh _vpos) vis
         (if (< (/ (float rtop) (+ rtop rowh))
-               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ;; count as visible
+               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ; count as visible
             start
           (with-current-buffer (window-buffer window)
             (save-excursion
@@ -331,7 +331,7 @@ Type M-x customize-group on-screen RET for configuration."
         end
       (cl-destructuring-bind (_x _y _rtop rbot rowh _vpos) vis
         (if (< (/ (float rbot) (+ rbot rowh))
-               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ;; count as visible
+               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ; count as visible
             end
           (with-current-buffer (window-buffer window)
             (save-excursion
