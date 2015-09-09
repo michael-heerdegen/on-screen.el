@@ -229,6 +229,8 @@ changes to a buffer highlighting is always removed to avoid
 confusion."
   :group 'on-screen :type 'boolean)
 
+(defvar on-screen-treat-cut-lines--default-fraction .3)
+
 (defcustom on-screen-treat-cut-lines nil
   "Whether to care about vertically cut lines.
 If nil, always count lines at the window start or end that are
@@ -237,9 +239,11 @@ number between 0 and 1, meaning that lines will count as visible
 when the hidden part of them is less than this number.  Note that
 a non-nil value may make scrolling stuttering on slow computers."
   :group 'on-screen
-  :type '(choice (const :tag "Count vertically cut lines as visible" nil)
-                 (float :tag "Count lines with hidden part less than this as visible"
-			:value .4)))
+  :type `(choice (const :tag "Count partially visible lines as visible"   nil)
+                 (const :tag "Count partially visible lines as not visible" t)
+                 (float
+                  :tag "Count lines with hidden part less than this as visible"
+                  :value ,on-screen-treat-cut-lines--default-fraction)))
 
 (defcustom on-screen-drawing-threshold 2
   "If set, highlight only when scrolled at least that many lines."
@@ -307,6 +311,11 @@ Type M-x customize-group on-screen RET for configuration."
 
 ;;;; Internal functions
 
+(defun on-screen--treat-cut-lines-get-fraction ()
+  (if (floatp on-screen-treat-cut-lines)
+      on-screen-treat-cut-lines
+    on-screen-treat-cut-lines--default-fraction))
+
 (defun on-screen-window-start (&optional window)
   "Like `window-start', but exclude partially visible lines."
   (let* ((start (window-start window))
@@ -315,7 +324,7 @@ Type M-x customize-group on-screen RET for configuration."
         start
       (cl-destructuring-bind (_x _y rtop _rbot rowh _vpos) vis
         (if (< (/ (float rtop) (+ rtop rowh))
-               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ; count as visible
+               (on-screen--treat-cut-lines-get-fraction)) ; count as visible
             start
           (with-current-buffer (window-buffer window)
             (save-excursion
@@ -331,7 +340,7 @@ Type M-x customize-group on-screen RET for configuration."
         end
       (cl-destructuring-bind (_x _y _rtop rbot rowh _vpos) vis
         (if (< (/ (float rbot) (+ rbot rowh))
-               (if (floatp on-screen-treat-cut-lines) on-screen-treat-cut-lines .4)) ; count as visible
+               (on-screen--treat-cut-lines-get-fraction)) ; count as visible
             end
           (with-current-buffer (window-buffer window)
             (save-excursion
