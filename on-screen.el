@@ -659,6 +659,14 @@ highlightings and clear all associated data."
   (add-hook 'window-configuration-change-hook #'on-screen-after-wconf-change)
   (setq on-screen-initialized-p t))
 
+(defun on-screen-unload-function ()
+  "Function to run when unloading on-screen."
+  (remove-hook 'pre-command-hook        #'on-screen-pre-command)
+  (remove-hook 'window-scroll-functions #'on-screen-after-scroll)
+  (remove-hook 'after-change-functions  #'on-screen-after-change)
+  (remove-hook 'window-configuration-change-hook #'on-screen-after-wconf-change)  
+  nil)
+
 
 (provide 'on-screen)
 
