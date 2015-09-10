@@ -551,7 +551,7 @@ This should normally go to `window-scroll-functions'."
                             (pos-visible-in-window-p (point-max) win))
                    ;; after narrow
                    (setq s1 nil s2 nil))
-                 
+
                  (when (and s1 s2
                             (>= s2 (point-max))
                             (< s1 (on-screen-window-start win))
@@ -580,7 +580,7 @@ This should normally go to `window-scroll-functions'."
                overlays (delq nil overlays))
               (dolist (ov overlays)
                 (overlay-put ov 'window win) ; display only in selected window
-                (overlay-put ov 'priority on-screen-overlay-priority)) 
+                (overlay-put ov 'priority on-screen-overlay-priority))
               (when (memq on-screen-highlight-method '(shadow line))
                 (dolist (ov overlays)
                   (overlay-put ov 'face (on-screen-get-shadow-face win))))
@@ -664,7 +664,7 @@ highlightings and clear all associated data."
   (remove-hook 'pre-command-hook        #'on-screen-pre-command)
   (remove-hook 'window-scroll-functions #'on-screen-after-scroll)
   (remove-hook 'after-change-functions  #'on-screen-after-change)
-  (remove-hook 'window-configuration-change-hook #'on-screen-after-wconf-change)  
+  (remove-hook 'window-configuration-change-hook #'on-screen-after-wconf-change)
   nil)
 
 
