@@ -1,6 +1,7 @@
 ;;; on-screen.el --- guide your eyes while scrolling   -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2013 - 2015 Michael Heerdegen
+;;               2015 Free Software Foundation, Inc
 
 ;; Author: Michael Heerdegen <michael_heerdegen@web.de>
 ;; Maintainer: Michael Heerdegen <michael_heerdegen@web.de>
