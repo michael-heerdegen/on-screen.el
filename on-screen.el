@@ -133,7 +133,7 @@
   "What area to highlight.
 When nil, highlight the previously visible screenful.  Else
 highlight the previously off-screen parts."
-  :group 'on-screen :type 'boolean)
+  :type 'boolean)
 
 (defcustom on-screen-highlight-method 'fringe
   "Type of highlighting used by `on-screen-mode'.
@@ -157,8 +157,7 @@ dynamically to support different background colors (color themes)
           (const :tag "Fringe markers"                     fringe)
           (const :tag "Transparent overlay"                shadow)
           (const :tag "Overlay on confining text lines"    line)
-          (const :tag "Narrow horizontal line"             narrow-line))
-  :group 'on-screen)
+          (const :tag "Narrow horizontal line"             narrow-line)))
 
 (defcustom on-screen-fringe-marker-position t
   "Where to display fringe markers.
@@ -166,8 +165,7 @@ Ignored if highlighting doesn't use the fringe."
   :type '(choice
           (const :tag "Left fringe only"  left)
           (const :tag "Right fringe only" right)
-          (const :tag "Both sides"        t))
-  :group 'on-screen)
+          (const :tag "Both sides"        t)))
 
 (defface on-screen-shadow
   '((((class color) (min-colors 88) (background light))
@@ -179,14 +177,12 @@ Ignored if highlighting doesn't use the fringe."
      :background "green")
     (((class color) (min-colors 8)  (background dark))
      :background "blue"))
-  "Face used for displaying a transparent overlay."
-  :group 'on-screen)
+  "Face used for displaying a transparent overlay.")
 
 (defface on-screen-hl-line
   '((((background light)) :background "#ffa0a0")
     (((background dark))  :background "#300000"))
-  "Face used for displaying the \"line\" style overlay."
-  :group 'on-screen)
+  "Face used for displaying the \"line\" style overlay.")
 
 (defcustom on-screen-highlighting-to-background-delta .05
   "How much shadow and line highlighting should differ from background.
@@ -197,23 +193,20 @@ just face `on-screen-shadow'.
 
 This variable is ignored if the library \"hexrgb\" is not
 available."
-  :group 'on-screen
   :type '(choice (const :tag "Use standard face" nil)
                  (float :tag "Delta")))
 
 (defface on-screen-fringe '((t (:inherit shadow)))
-  "Face used for fringe markers."
-  :group 'on-screen)
+  "Face used for fringe markers.")
 
 (defface on-screen-narrow-line
   '((((background dark))  (:width extra-expanded :underline (:color "gray30" :style wave)))
     (((background light)) (:width extra-expanded :underline (:color "gray70" :style wave))))
-  "Face used by the narrow-line highlighting method."
-  :group 'on-screen)
+  "Face used by the narrow-line highlighting method.")
 
 (defcustom on-screen-delay 5
   "How long `on-screen-mode' should display optical aids."
-  :group 'on-screen :type 'number)
+  :type 'number)
 
 (defcustom on-screen-auto-update t
   "Whether to update highlighting for successive scrolls.
@@ -221,7 +214,7 @@ When non-nil, every scroll action will cause a highlighting
 according to the previously visible screenful.  When nil, a once
 drawn highlighting will remain fixed relative to the text even
 if you scroll further until `on-screen-delay' is over."
-  :group 'on-screen :type 'boolean)
+  :type 'boolean)
 
 (defcustom on-screen-remove-when-edit nil
   "Whether to instantly remove highlighting when editing.
@@ -229,7 +222,7 @@ if you scroll further until `on-screen-delay' is over."
 In those situations where a single command causes multiple
 changes to a buffer highlighting is always removed to avoid
 confusion."
-  :group 'on-screen :type 'boolean)
+  :type 'boolean)
 
 (defvar on-screen-treat-cut-lines--default-fraction .3)
 
@@ -240,7 +233,6 @@ only partially visible as part of the visible area.  Else, a
 number between 0 and 1, meaning that lines will count as visible
 when the hidden part of them is less than this number.  Note that
 a non-nil value may make scrolling stuttering on slow computers."
-  :group 'on-screen
   :type `(choice (const :tag "Count partially visible lines as visible"   nil)
                  (const :tag "Count partially visible lines as not visible" t)
                  (float
@@ -249,7 +241,6 @@ a non-nil value may make scrolling stuttering on slow computers."
 
 (defcustom on-screen-drawing-threshold 2
   "If set, highlight only when scrolled at least that many lines."
-  :group 'on-screen
   :type '(choice (const :tag "Off" nil)
                  (integer :value 2)))
 
