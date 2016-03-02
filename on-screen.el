@@ -636,7 +636,7 @@ highlightings and clear all associated data."
   "Return non-nil if on-screen is enabled in BUFFER."
   (with-current-buffer (or buffer (current-buffer))
     (and
-     (if on-screen-global-mode t on-screen-mode)
+     (or on-screen-global-mode on-screen-mode)
      (cond
       ((not on-screen-inhibit-highlighting) t)
       ((functionp on-screen-inhibit-highlighting)
